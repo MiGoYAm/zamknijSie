@@ -26,7 +26,7 @@ public final class ZamknijSie extends JavaPlugin implements Listener {
     public void timer(){
         if(Bukkit.getOnlinePlayers().size() <= 1) {
             getLogger().info("No players online. Server shutdowns in " + minutes + string());
-            task = Bukkit.getScheduler().runTaskLater(this,()->getServer().shutdown(),minutes * 1200L);}}
+            task = Bukkit.getScheduler().runTaskLater(this,()-> getServer().shutdown(),minutes * 1200);}}
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Bukkit.getScheduler().cancelTask(task.getTaskId());
@@ -36,4 +36,3 @@ public final class ZamknijSie extends JavaPlugin implements Listener {
         timer();
     }
 }
-// if(task.isCanceled)

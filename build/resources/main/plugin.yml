@@ -1,0 +1,5 @@
+name: ZamknijSie
+version: 1.0
+main: me.migoyam.zamknijsie.ZamknijSie
+api-version: 1.16
+authors: [ MiGoYAm ]

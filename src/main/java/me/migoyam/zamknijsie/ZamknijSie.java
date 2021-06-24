@@ -1,6 +1,5 @@
 package me.migoyam.zamknijsie;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -10,29 +9,27 @@ import org.bukkit.scheduler.BukkitTask;
 
 public final class ZamknijSie extends JavaPlugin implements Listener {
     private BukkitTask task;
-    private final short minutes = (short) getConfig().getInt("serverShutdownAfter");
-    private final String string (){
-        if(minutes == 1) {
-            return " minute.";
-        }else
-            return " minutes.";
-    }
+    private final int minutes = getConfig().getInt("serverShutdownAfter");
+    private final String string = (minutes == 1) ? " minute." : " minutes.";
+    public void timer(){
+        if(getServer().getOnlinePlayers().size() == 0) {
+            getLogger().info("No players online. Server shutdowns in " + minutes + string);
+            task = getServer().getScheduler().runTaskLater(this,()->{
+                getServer().shutdown();
+                getLogger().info("Shutdown");
+            },minutes * 1200L);}}
     @Override
     public void onEnable() {
-        saveDefaultConfig();
         getServer().getPluginManager().registerEvents(this, this);
+        saveDefaultConfig();
         timer();
     }
-    public void timer(){
-        if(Bukkit.getOnlinePlayers().size() == 0) {
-            getLogger().info("No players online. Server shutdowns in " + minutes + string());
-            task = Bukkit.getScheduler().runTaskLater(this,()-> getServer().shutdown(),minutes * 1200);}}
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        Bukkit.getScheduler().cancelTask(task.getTaskId());
+        task.cancel();
     }
     @EventHandler
     public void onQuit(PlayerQuitEvent event){
-        Bukkit.getScheduler().runTaskLater(this, this::timer, 1);
+        getServer().getScheduler().runTaskLater(this, this::timer, 1);
     }
 }
